@@ -3,7 +3,7 @@
 </script>
 
 <template>
-   
+    我是Player
 </template>
 
 <style scoped lang="scss">

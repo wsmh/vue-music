@@ -1,0 +1,13 @@
+a {
+    text-decoration: none;
+    color: black;
+    /* 取消下划线 */
+}
+
+a:focus {
+    outline: none;
+    /* 移除焦点时的轮廓线 */
+    /* 如果你还想要移除其他样式，比如背景色变化，也可以在这里添加 */
+    background-color: transparent;
+    /* 示例：保持背景色不变 */
+}

@@ -1,4 +1,4 @@
-@mixin circleImg($width: 32px) {
+@mixin circleImg($width) {
     width: $width;
     height: $width;
     border-radius: $width/2;
@@ -13,4 +13,21 @@
 @mixin transp {
     border: none;
     background-color: rgba(0, 0, 0, 0);
+}
+
+@mixin ul-noDots {
+    list-style-type: none;
+    /* 移除列表项前的默认圆点 */
+    padding: 0;
+    /* 移除ul元素的内边距，因为有时内边距会保留空间给列表标记 */
+    margin: 0;
+    /* 可选，移除ul元素的外边距 */
+}
+
+@mixin flex-space($dis) {
+    margin-right: $dis;
+
+    &:last-child {
+        margin-right: 0;
+    }
 }

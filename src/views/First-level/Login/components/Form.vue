@@ -54,7 +54,6 @@ import { ref } from 'vue';
             color: $info-color;
             font-size: 12px;
             a{
-                text-decoration: none;
                 color: rgb(26, 93, 181);
             }
         }
