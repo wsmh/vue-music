@@ -8,17 +8,15 @@
   const activeTab = ref(1);
 
 
-
 </script>
 
 <template>
-    
     <ul class="tabs">
         <li v-for="item in props.labelList" :key="item.id" class="tab-pane" :value="activeTab" >
             <router-link active-class="active" :to="item.path" class="router-content" @click="activeTab = item.id">
                 <div class="to-page">
                     <div class="page-icon">
-                        <img src="@/components/logo.png">
+                        <img :src="item.imgUrl">
                     </div>
                     <div class="page-label">
                         {{item.name}}
@@ -60,7 +58,9 @@
             
         }
         .active{
-            color: rgb(255, 0, 0);
+            .page-label{
+                color: red;
+            }
         }
     }
 

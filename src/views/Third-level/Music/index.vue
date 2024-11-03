@@ -34,7 +34,7 @@ const tabList = [{
 <template>
     <div class="tab-con">
         <Tab :label-list="tabList" type="secondary"/>
-        <img src="./components/arrow.png">
+        <img src="./components/png/arrow.png">
     </div>
     
     <RouterView/>

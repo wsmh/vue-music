@@ -8,7 +8,7 @@ import Zhibo from '@/views/Third-level/example/Zhibo.vue'
 import Player from '@/views/Third-level/example/Player.vue'
 import Ranking from '@/views/Fourth-level/Ranking/index.vue'
 import Selected from '@/views/Fourth-level//Selected/index.vue'
-import Recommend from '@/views/Second-level/Recommend/Recommend.vue'
+import Recommend from '@/views/Second-level/Recommend/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

@@ -1,24 +1,31 @@
 <script setup>
     import RootTabBar from './components/RootTabBar.vue';
+
+    
     const tabList = [{
+        id:1,
         name:'推荐',
-        imgUrl:'',
-        path:'/'
+        imgUrl: new URL('@/components/png/logo.png',import.meta.url).href,    //踩坑,动态传入不能直接解析相对路径
+        path:'/layout/recommend'
     },{
+        id:2,
         name:'发现',
-        imgUrl:'',
-        path:'/'
+        imgUrl: new URL('@/components/png/logo.png',import.meta.url).href,
+        path:'/layout/explore'
     },{
+        id:3,
         name:'满意',
-        imgUrl:'',
+        imgUrl: new URL('@/components/png/logo.png',import.meta.url).href,
         path:'/'
     },{
+        id:4,
         name:'动态',
-        imgUrl:'',
+        imgUrl: new URL('@/components/png/logo.png',import.meta.url).href,
         path:'/'
     },{
+        id:5,
         name:'我的',
-        imgUrl:'',
+        imgUrl: new URL('@/components/png/logo.png',import.meta.url).href,
         path:'/'
     }]
 </script>
@@ -26,8 +33,10 @@
 <template>
     
     <div class="layout-con">
-        <RouterView/>
-
+        <div class="main-part">
+            <RouterView/>
+        </div>
+        
         <div class="bottom-bar">
             <RootTabBar :label-list="tabList"/>
         </div>
@@ -45,6 +54,9 @@
             height: 70px;
             position: fixed;
             bottom: 0;
+        }
+        .main-part{
+            margin-top: 15px;
         }
     }
     .layout-con::before{

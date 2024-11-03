@@ -1,5 +1,6 @@
 <script setup>
 import Tab from '@/components/Tab.vue';
+
 const tabList = [
         {
             id:1,
@@ -23,11 +24,10 @@ const tabList = [
 
 <template>
     <div class="header">
-        <img src="@/components/menu.png" class="menu-icon">
+        <img src="@/components/png/menu.png" class="menu-icon">
         <Tab :label-list="tabList" type="main"/>
-        <img src="@/components/search.png" class="search-icon">
+        <img src="@/components/png/search.png" class="search-icon">
     </div>
-    
     <RouterView/>
 </template>
 
@@ -35,7 +35,6 @@ const tabList = [
     .header{
         display: flex;
         align-items: center;
-        margin-top: 15px;
         .menu-icon{
             width: 25px;
             height: 30px;

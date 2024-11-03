@@ -8,7 +8,14 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      // 忽略自定义元素警告
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('swiper-')
+        }
+      }
+    }),
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
@@ -33,5 +40,5 @@ export default defineConfig({
         `
       }
     }
-  }
+  },
 })

@@ -7,7 +7,7 @@ import Form from './components/Form.vue';
         <div class="guest-login">Guest</div>
     </div>
     <div class="logo">
-        <img src="@/components/logo.png">
+        <img src="@/components/png/logo.png">
     </div>
     <div class="text">天 翼 账 号 提 供 认 证 服 务</div>
     <Form />
