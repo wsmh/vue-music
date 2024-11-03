@@ -1,0 +1,16 @@
+@mixin circleImg($width: 32px) {
+    width: $width;
+    height: $width;
+    border-radius: $width/2;
+}
+
+@mixin center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin transp {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}
