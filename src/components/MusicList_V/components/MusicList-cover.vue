@@ -29,7 +29,7 @@
     <div class="con" :style="{width: thisSize.width}">
         <div class="cover-con" :style="thisSize">
             <div class="listen-count">
-                <img src="../../png/listen.png">
+                <el-icon class="headset-con"><Headset /></el-icon>
                 <p>{{numTrans(props.musicData.playCount)}}</p>
             </div>
             <img :src="props.musicData.coverImgUrl" :style="thisSize">
@@ -67,9 +67,10 @@
             display: flex;
             align-items: center;
             left: 5px;
-            img{
-                width: 12px;
+            .headset-con{
                 height: 12px;
+                width: 12px;
+                color: white;
             }
             p{
                 margin-left: 2px;

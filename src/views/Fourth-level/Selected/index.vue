@@ -4,7 +4,7 @@ import { getTopMusicAPI } from '@/api/getMusicList';
 import { getNewMusicAPI } from '@/api/getMusicList';
 import { onMounted, ref } from 'vue';
 import {register} from 'swiper/element/bundle'
-import MusicList_V from '@/components/MuiscList_V/index.vue';
+import MusicList_V from '@/components/MusicList_V/index.vue';
 
 register();
 
@@ -12,7 +12,7 @@ const bannerData = ref([]);
 const musicList_high = ref([]);
 const musicList_new = ref([]);
 
-async function getBannerData(){
+async function getMusicData(){
   const res1 = await getBannerAPI();
   const res2 = await getTopMusicAPI(5);
   const res3 = await getNewMusicAPI(5);
@@ -23,7 +23,7 @@ async function getBannerData(){
 }
 
 onMounted(()=>{
-  getBannerData();
+  getMusicData();
 })
 
 
@@ -32,8 +32,6 @@ onMounted(()=>{
 </script>
 
 <template>
-    <div class="main-bgc">
-
       <div class="main-con">
         <swiper-container class="swiper" loop="true" lazy="true" :autoplay="{delay:3000}">
           <swiper-slide class="swiper-slide" v-for="item in bannerData">
@@ -46,17 +44,9 @@ onMounted(()=>{
 
         <div class="bottom-con"></div>
       </div>
-    </div>
-    
 </template>
     
 <style scoped lang="scss">
-    .main-bgc{
-      @include center;
-    }
-    .main-con{
-      width: 92%;
-    }
     .swiper{
       margin-top: 5px;
       width: 100%;

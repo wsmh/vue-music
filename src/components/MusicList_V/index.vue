@@ -1,5 +1,5 @@
 <script setup>
-    import MusicCover from './components/Music-cover.vue';
+    import MusicCover from './components/MusicList-cover.vue';
     import { defineProps } from 'vue';
 
     const props = defineProps({
@@ -27,8 +27,8 @@
 
 <style scoped lang="scss">
     .title{
-        color: rgba(20, 24, 41, 0.751);
-        font-size: 18px;
+        color: $title-color;
+        font-size: 16px;
         font-weight: 700;
     }
     .music-list{

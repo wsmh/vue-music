@@ -23,22 +23,33 @@ const tabList = [
 </script>
 
 <template>
-    <div class="header">
-        <img src="@/components/png/menu.png" class="menu-icon">
-        <Tab :label-list="tabList" type="main"/>
-        <img src="@/components/png/search.png" class="search-icon">
+    <div class="main-bgc">
+        <div class="main-con">
+            <div class="header">
+                <img src="@/components/png/menu.png" class="menu-icon">
+                <Tab :label-list="tabList" type="main"/>
+                <img src="@/components/png/search.png" class="search-icon">
+            </div>
+            <RouterView/>
+        </div>
     </div>
-    <RouterView/>
+    
 </template>
 
 <style scoped lang="scss">
+    .main-bgc{
+        @include center;
+      }
+    .main-con{
+        width: 92%;
+    }
     .header{
         display: flex;
         align-items: center;
         .menu-icon{
             width: 25px;
             height: 30px;
-            margin:0 50px 0 10px ;
+            margin:0 40px 0 0 ;
         }
 
         .search-icon{
