@@ -3,7 +3,7 @@
     import { onMounted,ref } from 'vue';
     import RecommendHeader from './components/RecommendHeader.vue';
     import MusicList_V from '@/components/MusicList_V/index.vue';
-    import MusicColumn from '@/components/MusicList_H/components/MusicColumn.vue';
+    import MusicList_H from '@/components/MusicList_H/index.vue'
     import { getLikeMusicAPI } from '@/api/Recommend';
 
     const topMusicData = ref([])
@@ -53,11 +53,12 @@ async function getMusicData(){
                     <p>{{getTimeRange()}}</p>
                     <MusicList_V :music-list="topMusicData" />
                 </div>
-                <MusicList_V :music-list="musicList_new" title="推荐歌单 >" class="rec-songs"/>
+                <MusicList_V :music-list="musicList_new" title="推荐歌单 >" class="rec-songs" v-if="musicList_new.length != 0"/>
                 
-                <MusicColumn :music-info="music_like[0]" v-if="music_like.length != 0"/>
+                <MusicList_H :music-list="music_like" v-if="music_like.length != 0" title="猜你喜欢的「今日」好歌 >"/>
                 
             </div>
+            <div class="rec-bottom"></div>
         </div>
     </div>
     
@@ -70,7 +71,10 @@ async function getMusicData(){
     .rec-con{
         width: 92%;
     }
-    
+    .rec-bottom{
+        width: 100%;
+        height: 100px;
+    }
     .time-rec{
         margin-bottom: 40px;
         p{
@@ -80,6 +84,6 @@ async function getMusicData(){
         }
     }
     .rec-songs{
-        margin-bottom: 20px
+        margin-bottom: 30px;
     }
 </style>
