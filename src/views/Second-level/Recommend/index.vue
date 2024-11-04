@@ -1,6 +1,5 @@
 <script setup>
-    import MusicCover from '@/components/Music-cover.vue';
-    import { getTopMusicAPI } from '@/api/getTopMusic';
+    import { getTopMusicAPI } from '@/api/getMusicList';
     import { onMounted,ref } from 'vue';
 
     const topMusicData = ref([])
@@ -16,7 +15,7 @@
 </script>
 
 <template>
-    <MusicCover size="normal" :music-data="topMusicData[0]" v-if="topMusicData.length != 0"/>
+    推荐页
 </template>
 
 <style scoped></style>

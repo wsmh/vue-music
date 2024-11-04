@@ -38,14 +38,14 @@ const tabList = [
         .menu-icon{
             width: 25px;
             height: 30px;
-            margin:0 25px 0 10px ;
+            margin:0 50px 0 10px ;
         }
 
         .search-icon{
             width: 25px;
             height: 25px;
             opacity: 0.5;
-            margin-left: 20px;
+            margin-left: 30px;
         }
     }
 </style>

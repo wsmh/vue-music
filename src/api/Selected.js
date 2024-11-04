@@ -1,10 +1,10 @@
 import httpInstance from "@/utils/http";
 
-export function getTopMusicAPI(limit) {
+export function getBannerAPI() {
     return httpInstance({
-        url: '/top/playlist/highquality',
+        url: '/banner',
         params: {
-            limit
+            type: 2
         }
     })
 }

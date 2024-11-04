@@ -33,10 +33,11 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `
         @use '@/css/mixin.scss' as *;
         @use '@/css/variables.scss' as *;
-        @use "src/styles/element/index.scss" as *;
+        @use "@/styles/element/index.scss" as *;
         `
       }
     }

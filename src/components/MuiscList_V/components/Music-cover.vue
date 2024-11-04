@@ -29,12 +29,12 @@
     <div class="con" :style="{width: thisSize.width}">
         <div class="cover-con" :style="thisSize">
             <div class="listen-count">
-                <img src="./png/listen.png">
+                <img src="../../png/listen.png">
                 <p>{{numTrans(props.musicData.playCount)}}</p>
             </div>
             <img :src="props.musicData.coverImgUrl" :style="thisSize">
             <div class="play-icon">
-                <img src="./png/play.png">
+                <img src="../../png/play.png">
             </div>
           </div>
           <div class="desc">{{props.musicData.name}}</div>

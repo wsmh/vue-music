@@ -1,34 +1,82 @@
 <script setup>
-import { register } from 'swiper/element/bundle'
-register() // 注册 swiper 组件,如果安装方法使用的是 cdn,则不需要这一步,也不需要上方的引入
-const swiperOptions = {
-  autoplay: {
-    delay: 3000,
-    enabled: true
-  }
+import { getBannerAPI } from '@/api/Selected';
+import { getTopMusicAPI } from '@/api/getMusicList';
+import { getNewMusicAPI } from '@/api/getMusicList';
+import { onMounted, ref } from 'vue';
+import {register} from 'swiper/element/bundle'
+import MusicList_V from '@/components/MuiscList_V/index.vue';
+
+register();
+
+const bannerData = ref([]);
+const musicList_high = ref([]);
+const musicList_new = ref([]);
+
+async function getBannerData(){
+  const res1 = await getBannerAPI();
+  const res2 = await getTopMusicAPI(5);
+  const res3 = await getNewMusicAPI(5);
+  bannerData.value = res1.banners;
+  musicList_high.value = res2.playlists;
+  musicList_new.value = res3.playlists;
+  
 }
+
+onMounted(()=>{
+  getBannerData();
+})
+
+
+
+
 </script>
 
 <template>
-  <main>
-    <swiper-container
-      class="swiper-container"
-      navigation="false"
-      ref="mainSwiper"
-      pagination="false"
-      loop="true"
-      :autoplay="swiperOptions.autoplay"
-    >
-      <swiper-slide v-pre>Slide 1</swiper-slide>
-      <swiper-slide v-pre>Slide 2</swiper-slide>
-      <swiper-slide v-pre>Slide 3</swiper-slide>
-    </swiper-container>
-  </main>
+    <div class="main-bgc">
+
+      <div class="main-con">
+        <swiper-container class="swiper" loop="true" lazy="true" :autoplay="{delay:3000}">
+          <swiper-slide class="swiper-slide" v-for="item in bannerData">
+            <img :src="item.pic">
+          </swiper-slide>
+        </swiper-container>
+        
+        <MusicList_V :musicList="musicList_high" title="甄选歌单" v-if="musicList_high.length != 0"/>
+        <MusicList_V class="new-list" :musicList="musicList_new" title="云村新鲜事" v-if="musicList_new.length != 0"/>
+
+        <div class="bottom-con"></div>
+      </div>
+    </div>
+    
 </template>
     
-<style scoped>
-    .swiper-container{
-        margin-top: 5px;
-        height: 200px;
+<style scoped lang="scss">
+    .main-bgc{
+      @include center;
     }
+    .main-con{
+      width: 92%;
+    }
+    .swiper{
+      margin-top: 5px;
+      width: 100%;
+      height: 200px;
+      margin-bottom: 30px;
+      .swiper-slide{
+        display: flex;
+        img{
+          width: 100%;
+          border-radius: 10px;
+        }
+      }
+    }
+    .new-list{
+      margin-top: 35px;
+    }
+
+    .bottom-con{
+      width: 100%;
+      height: 100px;
+    }
+    
 </style>
