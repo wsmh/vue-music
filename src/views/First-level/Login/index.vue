@@ -54,6 +54,7 @@ import Form from './components/Form.vue';
 }
 .logo{
     height: 400px;
+    caret-color: transparent;
     @include center;
     img{
         @include circleImg(56px)

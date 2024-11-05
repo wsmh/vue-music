@@ -31,3 +31,37 @@
         margin-right: 0;
     }
 }
+
+@mixin text-eli {
+    white-space: nowrap;
+    /* 禁止文本换行 */
+    overflow: hidden;
+    /* 隐藏超出容器的内容 */
+    text-overflow: ellipsis;
+    /* 使用省略号表示被隐藏的文本 */
+
+}
+
+@mixin flex-v-center {
+    display: flex;
+    align-items: center;
+}
+
+@mixin flex-h-center {
+    display: flex;
+    justify-content: center;
+}
+
+@mixin bgImg($imgPath) {
+    position: fixed;
+    background-size: cover;
+    z-index: -10;
+    width: 100%;
+    height: 100%;
+    background-image: url($imgPath);
+}
+
+@mixin text-linner($percentage) {
+    -webkit-mask-image: -webkit-linear-gradient(to right, black $percentage, transparent 100%);
+    mask-image: linear-gradient(to right, black $percentage, transparent 100%);
+}

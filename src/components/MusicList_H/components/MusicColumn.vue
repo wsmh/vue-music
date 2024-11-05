@@ -10,7 +10,6 @@
 
     const songInfo = ref(props.musicInfo.song)
     const artistsNames = ref('');
-    console.log(props.musicInfo);
     getArtistsName();
 
 
@@ -33,7 +32,8 @@
                 {{songInfo.name}}
             </div>
             <div class="song-desc">
-                {{ artistsNames }}
+               <div class="quality-icon"> {{songInfo.album.subType}} </div> 
+                <div class="song-spec-desc">{{ artistsNames }}</div>
             </div>
         </div>
         <img src="@/components/png/play-black.png" class="play-icon">
@@ -56,13 +56,26 @@
             .song-name{
                 color: $title-color;
                 font-weight: 600;
-                width: 250px;
             }
             .song-desc{
                 margin-top: 3px;
                 font-size: 12px;
-                width: 250px;
+                display: flex;
+                align-items: center;
                 color: rgba(91, 90, 90, 0.918);
+                .song-spec-desc{
+                    @include text-eli;
+                }
+                .quality-icon{
+                    white-space: nowrap;
+                    border: 1px solid rgba(251, 139, 139, 0.856);
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: rgb(240, 86, 35);
+                    padding: 1px 2px 1px 2px;
+                    border-radius: 4px;
+                    margin-right: 4px;
+                }
             }
         }
         .play-icon{

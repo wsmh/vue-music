@@ -20,6 +20,7 @@ async function getMusicData(){
   musicList_high.value = res2.playlists;
   musicList_new.value = res3.playlists;
   
+  
 }
 
 onMounted(()=>{

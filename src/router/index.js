@@ -9,12 +9,18 @@ import Player from '@/views/Third-level/example/Player.vue'
 import Ranking from '@/views/Fourth-level/Ranking/index.vue'
 import Selected from '@/views/Fourth-level//Selected/index.vue'
 import Recommend from '@/views/Second-level/Recommend/index.vue'
+import MusicListDetail from '@/views/First-level/MusicListDetail/index.vue'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/layout/recommend'
+      redirect: '/musiclist/:id'
+    }, {
+      component: MusicListDetail,
+      path: '/musiclist/:id'
     },
     {
       component: Login,
