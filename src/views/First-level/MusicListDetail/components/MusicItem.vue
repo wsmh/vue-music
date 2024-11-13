@@ -4,13 +4,16 @@
     const props = defineProps({
         musicInfo:{
             type: Object
+        },
+        index:{
+            type:Number
         }
     })
 </script>
 
 <template>
     <div class="item-con">
-        <div class="index">1</div>
+        <div class="index">{{props.index}}</div>
         <div class="music-info">
             <div class="music-name">
                 蓝色土耳其
@@ -45,7 +48,9 @@
     width:100%;
     
     .index{
+        margin-bottom: 5px;
         color: rgb(125, 124, 124);
+        font-size: 14px;
     }
     .music-info{
         display: flex;
@@ -53,7 +58,8 @@
         margin-left: -110px;
         .music-name{
             font-size: 16px;
-            margin-bottom: 3px
+            margin-bottom: 3px;
+            color: rgb(47, 53, 85);
         }
         .music-prof{
             @include flex-v-center;

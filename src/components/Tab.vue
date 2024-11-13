@@ -47,6 +47,7 @@
             position: absolute;
             width: 16px;
             background-color: red;
+            border-radius: 2px;
             height: 3px;
             bottom: 4px;
             left: 10px;

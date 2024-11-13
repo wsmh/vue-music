@@ -1,6 +1,6 @@
 <script setup>
     import RootTabBar from './components/RootTabBar.vue';
-
+    import MusicPlayer from './components/MusicPlayer.vue';
     
     const tabList = [{
         id:1,
@@ -36,7 +36,9 @@
         <div class="main-part">
             <RouterView/>
         </div>
-        
+        <div class="music-player">
+            <MusicPlayer/>
+        </div>
         <div class="bottom-bar">
             <RootTabBar :label-list="tabList"/>
         </div>
@@ -67,5 +69,10 @@
         height: 100%;
         top: 0;
         z-index: -10;
+    }
+    .music-player{
+        width: 100%;
+        position: fixed;
+        bottom: 70px;
     }
 </style>

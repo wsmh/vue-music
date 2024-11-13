@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps,ref } from 'vue';
+    import { computed, defineProps,ref } from 'vue';
     import { numTrans } from '@/utils/numTrans';
     import MusicItem from './components/MusicItem.vue';
 
@@ -8,7 +8,6 @@
             type: Object
         }
     })
-
     const desc = ref('清香古韵，悠长弥漫\n本单选曲均为抒情、抗燥的古典音乐，睡前服用效果亦佳\n注：本歌单纯属兴趣使然，非专业探讨。\n—————— \n茶馆与音乐艺术是两种不同文化形态，其中茶馆是中国传统茶文化的物质载体，音乐艺术乃是全世界最具有情感的艺术形式，两者的结合是社会文化发展过程中自然选择的结果。茶与音乐的结合由来已久，虽然两者属于不同文化体系并各成一派，但两者在是基于民族传统精神文化思想的基础上形成了共同的精神理念、审美意境以及人生追求，都是情感熏陶与道德修养为主已达到身心交融完美、人与自然和谐至高的境界。当代多元化的社会语境造就了多元化的文化思潮与审美思想，人们不再仅仅局限于某一种文化形式或审美类型，因而运用于茶馆中音乐艺术风格也呈现出多元化特征，既有中国古风音乐又有西方古典音乐。\n\n作为茶文化的物质载体———茶馆，其自身也蕴藏着丰富的文化内涵，在数千年的发展演变中，其从最初的茶肆发展为当前风格各异、品位独特的茶馆，以及以饮茶过程为媒体的综合性表演形式主的茶艺馆，呈现出一个地域经济文化的发展轨迹与审美特色。茶馆文化品位与其室内外的装修、装饰有密切联系，常用绘画、雕塑、音乐等营造独特的文化底蕴，尤其是茶馆经营过程中通常会播放音乐或者现场弹奏音乐，营造高雅、舒适的饮茶环境，体悟茶文化深厚的内涵。因此，茶馆与音乐联系十分紧密，尤其对于追求高层次、多元化的精神需求的消费者来说，古典音乐已成为茶馆营造优雅环境不可或缺的重要媒介。\n\n要选择相对柔和的古典音乐。之所以选择柔和音乐，首先这是与茶馆文化相匹配的，茶馆本身就是将身心高度放松的场所，因此整个茶馆的环境，更多是放松，这就使得必须播放柔和音乐来与之匹配。柔和的音乐能够有效降低茶客的焦躁度，更好的品味茶。其次，要选择愉悦温馨的音乐。选择的古典音乐，既要消除茶客的焦虑，同时还要让其感受到舒心，不能选择一些悲情、亢奋的音乐。最后，要注重多重融合原则。所谓多重融合，就是要充分考虑茶客的需求和喜好，将其与音乐内容选择相融合，此外，是古典音乐选择要与自身茶馆经营的特色相融合，要达到浑然一体的效果。\n————— \n参考文献：\n胡倩倩，《清香古韵———基于古典音乐视角的茶文化审美研究》\n吴玉敏：《浅析古典音乐在茶馆中的运用》\n李倩义：《中西文化交融背景下的现代茶馆》\n包树德：《中国音乐审美导论》，北京：中国文史出版社，2006.4版');
 
     function rowToSpace(str){
@@ -19,9 +18,10 @@
 </script>
 
 <template>
-    <div class="page-bgc">
         <div class="main">
-            <div class="page-info-con"><div class="info-con">
+            <div class="page-bgc"></div>
+            <div class="page-info-con">
+                <div class="info-con">
                 <div class="header">
                     <div class="back-btn">
                         <el-icon :size="28" style="color:white;"><ArrowLeft /></el-icon>
@@ -108,18 +108,6 @@
             </div>
             </div>
             <div class="music-list-con">
-                <div class="news-con">
-                    <div class="news-icon">
-                        11.11
-                    </div>
-                    <div class="news-text">
-                        VIP 低至4.9折! 双11送茅台
-                    </div>
-                    <div class="news-link">
-                        立即抢购 >
-                    </div>
-                    
-                </div>
                 <div class="music-list">
                     <div class="music-oper-con">
                         <img src="@/components/png/play-red.png">
@@ -137,39 +125,46 @@
                             <div class="manage"><el-icon :size="22" style="color: rgba(0,0,0,0.8);"><Fold /></el-icon></div>
                         </div>
                     </div>
-                    <div class="music-items">
-                        <MusicItem/>
+                    <div class="music-items" v-for="i in 20">
+                        <MusicItem :index="i"/>
                     </div>
                 </div>
+                <div class="list-foot"></div>
             </div>
             
-            
-            
-        
         </div>
-    </div>
 </template>
 
 <style scoped lang="scss">
+    .list-foot{
+        width: 100%;
+        height: 10px;
+        background-color: white;
+    }
     .main{
+        overflow-x: hidden;
         @include flex-v-center;
         flex-direction: column;
         width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        z-index: 10;
     }
     .music-list-con{
-        position: relative;
         width: 100%;
-        margin-top: 50px;
+        margin-top: 30px;
+        border-radius: 15px;
         @include flex-v-center;
-        flex-direction: column;
+        flex-direction: column; 
         background-color: white;
         .music-oper-con{
             width: 100%;
             height: 56px;
             @include flex-v-center;
+            margin-top: 2px;
             justify-content: space-between;
             img{
-                width: 28px;
+                width: 24px;
                 margin-left: -9px;
             }
             .music-play-text{
@@ -178,12 +173,13 @@
                 .text-h{
                     font-size: 16px;
                     font-weight: 600;
-                    color: rgb(72, 72, 74);
+                    color: rgb(56, 62, 92);
                 }
                 .music-count{
-                    font-size: 12px;
+                    font-size: 10px;
                     margin-left: 5px;
-                    margin-top: 3px;
+                    margin-top: 7px;
+                    color: rgb(56, 62, 92);
                 }
             }
             .down-manage-con{
@@ -194,47 +190,21 @@
                 }
             }
         }
-        .news-con{
-            .news-icon{
-                margin-left: 8px;
-                font-size: 8px;
-                font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-                color: rgb(249, 115, 4);
-                height: 16px;
-                width: 16px;
-                border-radius: 12px;
-                border: 2px solid rgb(249, 115, 4);
-                @include center;
-            }
-            .news-text{
-                font-size: 14px;
-                margin-left: -130px;
-                color: rgb(30, 30, 41);
-            }
-            .news-link{
-                margin-right: 8px;
-                font-size: 11px;
-                color: rgba(24, 24, 24, 0.427);
-            }
-            position: absolute;
-            @include flex-v-center;
-            justify-content: space-between;
-            z-index: -5;
-            width: 100%;
-            height: 45px;
-            border-radius: 5px;
-            top: -40px;
-            left: 0;
-            background-color: rgb(235, 242, 247);
-        }
         .music-list{
             width: 92%;
+            height: 100%;
+            .music-items{
+                margin-bottom: 12px;
+            }
         }
-
+        
     }
     
     .page-bgc{
         @include bgImg('http://p1.music.126.net/2zSNIqTcpHL2jIvU6hG0EA==/109951162868128395.jpg');
+        height: 350px;
+        top: 0;
+        left: 0;
     }
     .cover{
         position: relative;
@@ -280,13 +250,16 @@
     }
     .page-info-con{
         width: 100%;
+        height: 100%;
         margin-top: 15px;
         @include flex-h-center;
-        
         .info-con{
             width: 92%;
         }
         .header{
+            position: fixed;
+            top: 20px;
+            left: 12px;
             width: 100%;
             height: 50px;
             @include flex-v-center;
@@ -301,6 +274,7 @@
             .header-tools{
                 display: flex;
                 align-items: center;
+                margin-right: 20px;
             }
             .header-text{
                 margin-left: 50px;
@@ -311,7 +285,7 @@
         }
     }
     .info-body{
-        margin-top: 10px;
+        margin-top: 80px;
 
         .desc-con{
             position: relative;
@@ -319,7 +293,6 @@
             .desc{
                 white-space: nowrap;
                 color: rgba(246, 246, 246, 0.507);
-                overflow: hidden;
                 text-overflow: clip;
                 font-size: 12px;
                 @include text-linner(90%)

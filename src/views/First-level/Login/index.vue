@@ -1,11 +1,17 @@
 <script setup>
 import Form from './components/Form.vue';
+import { guestLoginAPI } from '@/api/Login';
+
+async function guestLogin() {
+    const res = await guestLoginAPI();
+    console.log(res);
+    
+}
 </script>
 
 <template>
-    <div class="bgc-con">
-        <div class="guest-login">Guest</div>
-    </div>
+    <div class="bgc-con"></div>
+    <div class="guest-login" @click="guestLogin">Guest</div>
     <div class="logo">
         <img src="@/components/png/logo.png">
     </div>
@@ -42,15 +48,14 @@ import Form from './components/Form.vue';
     background-size: cover;
     background: linear-gradient(rgba(253, 213, 213, 0.514),rgba(253, 253, 253, 0.4));
     @include center;
-
-    .guest-login{
-        position: absolute;
-        z-index: 1;
-        color: $info-color;
-        font-size: 13px;
-        top: 30px;
-        right: 20px;
-    }
+}
+.guest-login{
+    position: absolute;
+    z-index: 1;
+    color: $info-color;
+    font-size: 14px;
+    top: 30px;
+    right: 20px;
 }
 .logo{
     height: 400px;

@@ -28,3 +28,9 @@ export function loginAPI(phone, captcha) {
         }
     })
 }
+
+export function guestLoginAPI() {
+    return httpInstance({
+        url: '/register/anonimous'
+    })
+}

@@ -10,14 +10,14 @@ import Ranking from '@/views/Fourth-level/Ranking/index.vue'
 import Selected from '@/views/Fourth-level//Selected/index.vue'
 import Recommend from '@/views/Second-level/Recommend/index.vue'
 import MusicListDetail from '@/views/First-level/MusicListDetail/index.vue'
-
+import MySpace from '@/views/Second-level/MySpace/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/musiclist/:id'
+      redirect: '/layout/myspace'
     }, {
       component: MusicListDetail,
       path: '/musiclist/:id'
@@ -55,6 +55,9 @@ const router = createRouter({
       }, {
         component: Recommend,
         path: '/layout/recommend'
+      }, {
+        component: MySpace,
+        path: '/layout/myspace'
       }]
     },
   ]
