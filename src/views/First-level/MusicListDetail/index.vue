@@ -1,29 +1,76 @@
 <script setup>
-    import { computed, defineProps,ref } from 'vue';
-    import { numTrans } from '@/utils/numTrans';
+    import { computed, onMounted,ref } from 'vue';
+    import { numTrans } from '@/utils/dataHandle';
     import MusicItem from './components/MusicItem.vue';
-
-    const props = defineProps({
-        MLInfo:{
-            type: Object
+    import { useRoute } from 'vue-router';
+    import { getListDetailAPI } from '@/api/getMusicList';
+    import { getMusicDetail } from '@/api/MusicDetail';
+    import { getListInfoAPI } from '@/api/getMusicList';
+    
+    const route = useRoute();
+    const songsList = ref([])
+    const listInfo = ref({})
+    const desc = ref('');
+    const stopLoad = ref(false);
+    const isFullScreen = ref(false);
+    const bgcStyle = computed(()=>{
+        return{
+            backgroundImage: `url(${listInfo.value.coverImgUrl})`
         }
     })
-    const desc = ref('清香古韵，悠长弥漫\n本单选曲均为抒情、抗燥的古典音乐，睡前服用效果亦佳\n注：本歌单纯属兴趣使然，非专业探讨。\n—————— \n茶馆与音乐艺术是两种不同文化形态，其中茶馆是中国传统茶文化的物质载体，音乐艺术乃是全世界最具有情感的艺术形式，两者的结合是社会文化发展过程中自然选择的结果。茶与音乐的结合由来已久，虽然两者属于不同文化体系并各成一派，但两者在是基于民族传统精神文化思想的基础上形成了共同的精神理念、审美意境以及人生追求，都是情感熏陶与道德修养为主已达到身心交融完美、人与自然和谐至高的境界。当代多元化的社会语境造就了多元化的文化思潮与审美思想，人们不再仅仅局限于某一种文化形式或审美类型，因而运用于茶馆中音乐艺术风格也呈现出多元化特征，既有中国古风音乐又有西方古典音乐。\n\n作为茶文化的物质载体———茶馆，其自身也蕴藏着丰富的文化内涵，在数千年的发展演变中，其从最初的茶肆发展为当前风格各异、品位独特的茶馆，以及以饮茶过程为媒体的综合性表演形式主的茶艺馆，呈现出一个地域经济文化的发展轨迹与审美特色。茶馆文化品位与其室内外的装修、装饰有密切联系，常用绘画、雕塑、音乐等营造独特的文化底蕴，尤其是茶馆经营过程中通常会播放音乐或者现场弹奏音乐，营造高雅、舒适的饮茶环境，体悟茶文化深厚的内涵。因此，茶馆与音乐联系十分紧密，尤其对于追求高层次、多元化的精神需求的消费者来说，古典音乐已成为茶馆营造优雅环境不可或缺的重要媒介。\n\n要选择相对柔和的古典音乐。之所以选择柔和音乐，首先这是与茶馆文化相匹配的，茶馆本身就是将身心高度放松的场所，因此整个茶馆的环境，更多是放松，这就使得必须播放柔和音乐来与之匹配。柔和的音乐能够有效降低茶客的焦躁度，更好的品味茶。其次，要选择愉悦温馨的音乐。选择的古典音乐，既要消除茶客的焦虑，同时还要让其感受到舒心，不能选择一些悲情、亢奋的音乐。最后，要注重多重融合原则。所谓多重融合，就是要充分考虑茶客的需求和喜好，将其与音乐内容选择相融合，此外，是古典音乐选择要与自身茶馆经营的特色相融合，要达到浑然一体的效果。\n————— \n参考文献：\n胡倩倩，《清香古韵———基于古典音乐视角的茶文化审美研究》\n吴玉敏：《浅析古典音乐在茶馆中的运用》\n李倩义：《中西文化交融背景下的现代茶馆》\n包树德：《中国音乐审美导论》，北京：中国文史出版社，2006.4版');
+    let offset = 0;
 
-    function rowToSpace(str){
-        str.replace('\n',' ');
-        return str;
+    onMounted(()=>{
+        getDetailData();
+        getListInfo();
+    })
+
+    async function getListInfo() {
+        const res = await getListInfoAPI(route.query.id);
+        listInfo.value = res.playlist;
+        desc.value = listInfo.value.description;
+        desc.value.replace('\n',' ');
+    }
+
+    async function load() {
+        offset += 20;
+        const res = await getListDetailAPI(route.query.id,20,offset)
+        if(res.songs.length === 0){
+            stopLoad.value = true;
+            return;
+        }
+        for(let i = 0;i<res.songs.length;i++){
+            const musicRes = await getMusicDetail(res.songs[i].id)
+            res.songs[i].sq = musicRes.data.sq;
+            res.songs[i].jm = musicRes.data.jm;
+            res.songs[i].hr = musicRes.data.hr;
+        }
+        songsList.value = [...songsList.value,...res.songs];
+
+    }
+
+    async function getDetailData() {
+        const res = await getListDetailAPI(route.query.id,20,offset)
+        for(let i = 0;i<res.songs.length;i++){
+            const musicRes = await getMusicDetail(res.songs[i].id)
+            res.songs[i].sq = musicRes.data.sq;
+            res.songs[i].jm = musicRes.data.jm;
+            res.songs[i].hr = musicRes.data.hr;
+        }
+        songsList.value = res.songs;
         
     }
+
+    
 </script>
 
 <template>
-        <div class="main">
-            <div class="page-bgc"></div>
+        <div class="main" v-show="!isFullScreen">
+            <div class="page-bgc" :style="bgcStyle"></div>
             <div class="page-info-con">
                 <div class="info-con">
                 <div class="header">
-                    <div class="back-btn">
+                    <div class="back-btn" @click="$router.go(-1)">
                         <el-icon :size="28" style="color:white;"><ArrowLeft /></el-icon>
                     </div>
                     <div class="header-text">
@@ -42,16 +89,16 @@
                     <div class="main-info">
                         <div class="cover">
                             <div class="cover-bgc"></div>
-                            <img src="http://p1.music.126.net/QcPJfzds8ejF1FPgBaXMTw==/109951163128461676.jpg">
+                            <img :src="listInfo.coverImgUrl">
                             <div class="listen-count">
                                 <img src="@/components/png/play.png">
-                                <p>{{numTrans(31415286)}}</p>
+                                <p>{{numTrans(listInfo.playCount)}}</p>
                             </div>
                         </div>
                         <div class="list-info">
                             <div class="list-title">
                                 <div class="title-text">
-                                    古典清香 I 我的茶馆里住着巴赫与肖邦
+                                    {{ listInfo.name }}
                                 </div>
                                 <div class="arrow-con">
                                     <el-icon style="color: rgba(255, 255, 255, 0.7);" :size="14"><ArrowDown /></el-icon>
@@ -59,10 +106,10 @@
                             </div>
                             <div class="list-creator">
                                 <div class="creator-avatar">
-                                    <img src="http://p1.music.126.net/xXp7rcgDZpK2dG3gR-l2Xw==/109951164388323891.jpg">
+                                    <img :src="listInfo.creator?.avatarUrl">
                                 </div>
                                 <div class="creator-name">
-                                    不二叔爱听歌
+                                    {{ listInfo.creator?.nickname }}
                                 </div>
                                 <div class="subs-btn">
                                     <div class="plus-icon">+</div>
@@ -70,21 +117,18 @@
                                 </div>
                             </div>
                             <div class="list-tags">
-                                <div class="tag-con">
-                                    8.6 分 >
+                                <div class="tag-con" v-if="listInfo.score != null">
+                                    {{ listInfo.score }}分 >
                                 </div>
-                                <div class="tag-con">
-                                    华语 >
-                                </div>
-                                <div class="tag-con">
-                                    流行 >
+                                <div class="tag-con" v-for="tag,index in listInfo.tags" :key="index">
+                                    {{ tag }} >
                                 </div>
                             </div>
                         </div>
                         
                     </div>
-                    <div class="desc-con">
-                        <p class="desc"> {{ rowToSpace(desc) }}
+                    <div class="desc-con" @click="isFullScreen = true">
+                        <p class="desc"> {{ desc }}
                         </p>
                         <div class="expand-con">
                             <el-icon :size="15" style="color: rgba(255, 255, 255, 0.7)"><ArrowRight /></el-icon>
@@ -93,15 +137,15 @@
                     <div class="oprt-btns">
                         <div class="btn-item">
                             <el-icon :size="24" style="color: white;"><Share /></el-icon>
-                            <p>{{numTrans(15809)}}</p>
+                            <p>{{numTrans(listInfo.shareCount)}}</p>
                         </div>
                         <div class="btn-item">
                             <el-icon :size="24" style="color: white;"><Comment /></el-icon>
-                            <p>{{numTrans(1661)}}</p>
+                            <p>{{numTrans(listInfo.commentCount)}}</p>
                         </div>
                         <div class="btn-item-subs">
                             <el-icon :size="24" style="color: white;"><CirclePlusFilled /></el-icon>
-                            <p>{{numTrans(523913)}}</p>
+                            <p>{{numTrans(listInfo.subscribedCount)}}</p>
                         </div>
                     </div>
                 </div>
@@ -116,7 +160,7 @@
                                 播放全部
                             </div>
                             <div class="music-count">
-                                (249)
+                                ({{ listInfo.trackCount }})
                             </div>
                         </div>
                         
@@ -125,29 +169,145 @@
                             <div class="manage"><el-icon :size="22" style="color: rgba(0,0,0,0.8);"><Fold /></el-icon></div>
                         </div>
                     </div>
-                    <div class="music-items" v-for="i in 20">
-                        <MusicItem :index="i"/>
+                    <div class="music-items" v-infinite-scroll="load" :infinite-scroll-disabled="stopLoad">
+                        <div class="music-item" v-for="(item,index) in songsList">
+                            <div class="index">
+                                <p>{{index+1}}</p>
+                            </div>
+                            <MusicItem :music-info="item"/>
+                        </div>
                     </div>
                 </div>
-                <div class="list-foot"></div>
+                
             </div>
             
+        </div>
+        <div class="full-page" v-show="isFullScreen" @click="isFullScreen = false">
+            <div class="page-bgc full-bgc" :style="bgcStyle"></div>
+            <div class="full-main-con">
+                <div class="quit-con">
+                    X
+                </div>
+                <div class="full-cover-con">
+                    <img :src="listInfo.coverImgUrl">
+                </div>
+                <div class="full-title">
+                    {{ listInfo.name }}
+                </div>
+            </div>
+            <div class="full-page-text">
+                <div class="full-list-tags">
+                    <div class="tags-text">Tags:</div>
+                    <div class="full-tag-con" v-if="listInfo.score != null">
+                        {{ listInfo.score }}分
+                    </div>
+                    <div class="full-tag-con" v-for="tag,index in listInfo.tags" :key="index">
+                        {{ tag }}
+                    </div>
+                </div>
+                <div class="full-desc">
+                    {{ listInfo.description }}
+                </div>
+            </div>
         </div>
 </template>
 
 <style scoped lang="scss">
+    .full-page-text{
+        margin-top: 30px;
+        width: 92%;
+        .full-desc{
+            white-space: pre-line;
+            color: white;
+            font-size: 12px;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            margin-top: 12px;
+            margin-bottom: 15px;
+        }
+        .full-list-tags{
+            @include flex-v-center;
+            .tags-text{
+                color: rgba(255, 255, 255, 0.813);
+                font-size: 13px;
+                margin-bottom: 2px;
+                margin-right: 32px;
+            }
+            .full-tag-con{
+                background-color: $btn-tran-color;
+                color: rgba(255, 255, 255, 0.813);
+                font-size: 12px;
+                padding: 4px 6px 4px 6px;
+                border-radius: 200px;
+                @include flex-space(5px);
+            }
+        }
+    }
+    
+    .full-page{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .full-title{
+            color: white;
+            font-size: 15px;
+            margin-top: 15px;
+        }
+        .full-main-con{
+            margin-top: 20px;
+            width: 92%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .full-bgc{
+            width: 100%;
+            height: 100%;
+            filter: blur(50px);
+        }
+        .quit-con{
+            color: white;
+            font-weight: 300;
+            width: 100%;
+            height: 50px;
+            font-size: 18px;
+            text-align: end;
+        }
+        .full-cover-con{
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            background-color: white;
+            img{
+                border-radius: 10px;
+                height: 100%;
+            }
+        }
+    }
+    .index{
+        margin-bottom: 5px;
+        @include center;
+        width: 20px;
+        height: 20px;
+        margin-left: -6px;
+        p{
+        color: rgb(125, 124, 124);
+        font-size: 14px;
+        }
+
+    }
     .list-foot{
         width: 100%;
         height: 10px;
         background-color: white;
     }
     .main{
-        overflow-x: hidden;
         @include flex-v-center;
         flex-direction: column;
         width: 100%;
         height: 100%;
-        overflow-y: auto;
         z-index: 10;
     }
     .music-list-con{
@@ -194,17 +354,27 @@
             width: 92%;
             height: 100%;
             .music-items{
-                margin-bottom: 12px;
+                width: 100%;
+                .music-item{
+                    width: 100%;
+                    @include flex-v-center;
+                    margin-bottom: 12px;
+                }
             }
+            
         }
         
     }
     
     .page-bgc{
-        @include bgImg('http://p1.music.126.net/2zSNIqTcpHL2jIvU6hG0EA==/109951162868128395.jpg');
+        position: fixed;
+        background-size: cover;
+        filter: blur(100px);
+        width: 100%;
         height: 350px;
         top: 0;
         left: 0;
+        z-index: -10;
     }
     .cover{
         position: relative;
@@ -238,8 +408,8 @@
         }   
         .cover-bgc{
             position: absolute;
-            z-index: -10;
-            background-color: rgba(128, 128, 128, 0.84);
+            z-index: 0;
+            background-color: rgb(225, 222, 222);
             width: 90px;
             height: 10px;
             border-radius: 6px;
@@ -384,7 +554,7 @@
         width: 100%;
         .btn-item,.btn-item-subs{
             @include center;
-            background: rgba(138, 138, 138, 0.308);;
+            background: $btn-tran-color;
             height: 40px;
             width: 115px;
             border-radius: 60px;

@@ -1,7 +1,8 @@
 <script setup>
     import { defineProps } from 'vue';
     import { ref } from 'vue';
-    
+    import { getArtistsName } from '@/utils/dataHandle';
+
     const props = defineProps({
         musicInfo:{
             type: Object
@@ -9,17 +10,8 @@
     })
 
     const songInfo = ref(props.musicInfo.song)
-    const artistsNames = ref('');
-    getArtistsName();
+    
 
-
-    function getArtistsName(){
-        const nameArr = songInfo.value.artists.map(item=>{
-            return item.name;
-        })
-        artistsNames.value = nameArr.join('/')
-        artistsNames.value = artistsNames.value+' - '+songInfo.value.album.name
-    }
     
     
 </script>
@@ -33,7 +25,7 @@
             </div>
             <div class="song-desc">
                <div class="quality-icon"> {{songInfo.album.subType}} </div> 
-                <div class="song-spec-desc">{{ artistsNames }}</div>
+                <div class="song-spec-desc">{{ getArtistsName(songInfo.artists,songInfo.album) }}</div>
             </div>
         </div>
         <img src="@/components/png/play-black.png" class="play-icon">

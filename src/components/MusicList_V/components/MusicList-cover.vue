@@ -1,6 +1,8 @@
 <script setup>
     import { defineProps, onMounted,ref } from 'vue';
-    import { numTrans } from '@/utils/numTrans';
+    import { numTrans } from '@/utils/dataHandle';
+    import { useRouter } from 'vue-router';
+    const router = useRouter();
     const props = defineProps({
         musicData:{
             type:Object
@@ -23,10 +25,19 @@
         thisSize.value = imgSize[props.size];
         
     })
+
+   function toDetailPage(){
+        router.push({
+            path:'/musiclist',
+            query:{
+                id:props.musicData.id
+            }
+        })
+    }
 </script>
 
 <template>
-    <div class="con" :style="{width: thisSize.width}">
+    <div class="con" :style="{width: thisSize.width}" @click="toDetailPage">
         <div class="cover-con" :style="thisSize">
             <div class="listen-count">
                 <el-icon class="headset-con"><Headset /></el-icon>

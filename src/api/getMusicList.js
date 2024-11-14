@@ -17,3 +17,26 @@ export function getNewMusicAPI(limit) {
         }
     })
 }
+
+//获取歌单基本信息
+export function getListInfoAPI(id) {
+    return httpInstance({
+        url: '/playlist/detail',
+        params: {
+            id
+        }
+    })
+}
+
+
+//获取歌单所有歌曲
+export function getListDetailAPI(id, limit, offset) {
+    return httpInstance({
+        url: '/playlist/track/all',
+        params: {
+            id,
+            limit,
+            offset
+        }
+    })
+}

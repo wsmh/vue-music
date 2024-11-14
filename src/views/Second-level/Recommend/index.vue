@@ -73,7 +73,7 @@ async function getMusicData(){
     }
     .rec-bottom{
         width: 100%;
-        height: 100px;
+        height: 130px;
     }
     .time-rec{
         margin-bottom: 40px;

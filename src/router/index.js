@@ -20,7 +20,7 @@ const router = createRouter({
       redirect: '/layout/myspace'
     }, {
       component: MusicListDetail,
-      path: '/musiclist/:id'
+      path: '/musiclist'
     },
     {
       component: Login,

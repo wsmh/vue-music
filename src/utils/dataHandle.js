@@ -10,3 +10,12 @@ export function numTrans(num) {
     }
     return num;
 }
+
+export function getArtistsName(artists, album) {
+    const nameArr = artists.map(item => {
+        return item.name;
+    })
+    let str = nameArr.join('/')
+    str = str + ' - ' + album.name
+    return str;
+}
