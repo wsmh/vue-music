@@ -78,6 +78,7 @@
         const id = songsList.value[index].id
         const res = await getMusicUrl(id);
         songsList.value[index].url = res.data[0].url;
+        songsList.value[index].songTime = res.data[0].time;
         songStore.playSongList(songsList.value)
         songStore.setIndex(index);
         songStore.play();
@@ -86,6 +87,7 @@
             const idd = songsList.value[i].id
             const ress = await getMusicUrl(idd);
             songsList.value[i].url = ress.data[0].url;
+            songsList.value[i].songTime = ress.data[0].time;
         }
         songStore.playSongList(songsList.value)
     }

@@ -19,3 +19,16 @@ export function getArtistsName(artists, album) {
     str = str + ' - ' + album.name
     return str;
 }
+
+export function timeFormat(time) {
+    const seconds = Number(Math.ceil(time / 1000));
+    const mod_seconds = seconds % 60;
+    const minus = Number(Math.floor(seconds / 60));
+
+    let mLevel, sLevel;
+    sLevel = mod_seconds < 10 ? `0${mod_seconds}` : `${mod_seconds}`;
+    mLevel = minus < 10 ? `0${minus}` : `${minus}`
+
+    return mLevel + ":" + sLevel;
+
+}

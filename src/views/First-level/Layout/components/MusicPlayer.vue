@@ -35,8 +35,11 @@
                 <div class="cd-bgc">
                     <img :src="songStore.currentSong?.al.picUrl">
                 </div>
-                <div class="song-name">{{songStore.currentSong?.name }}</div>
-                <div class="song-creator">- {{getArtistsName(songStore.currentSong?.ar,songStore.currentSong?.al)}}</div>
+                <div class="cd-text">
+                    <div class="song-name">{{songStore.currentSong?.name }}</div>
+                    <div class="song-creator">- {{getArtistsName(songStore.currentSong?.ar,songStore.currentSong?.al)}}</div>
+                </div>
+                
             </div>
             <div class="oper-con">
                 <div class="stop-con">
@@ -57,6 +60,7 @@
 <style scoped lang="scss">
     .main-con{
         width: 92%;
+        
         @include center-space;
     }
     .vt-con{
@@ -65,44 +69,32 @@
         height: 42px;
         @include center;
     }
-    .song-name{
-        margin-left: 10px;
-        font-size: 15px;
-        color: rgb(75,74,80);
-        white-space: nowrap;
-    }
-    .song-creator{
-        margin-left: 7px;
-        font-size: 15px;
-        color: rgb(140,140,140);
-        width: 200px;
+    .cd-text{
+        @include flex-v-center;
         @include text-eli;
-    }
-    .stop-con{
-        height: 24px;
-        width: 24px;
-        margin-right: 15px;
-        position: relative;
-        .circle{
-            @include center;
-            position: absolute;
-            border: 2px solid rgb(100,100,100);
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
+        width: 280px;
+        .song-name{
+            margin-left: 10px;
+            font-size: 15px;
+            color: rgb(75,74,80);
+            white-space: nowrap;
+            @include text-eli;
         }
-        
-        img{
-            height: 9px;
-            width: 8px;
+        .song-creator{
+            margin-left: 7px;
+            font-size: 15px;
+            flex: 1;
+            @include text-eli;
+            color: rgb(140,140,140);
         }
-        
     }
+    
     .cd-con{
         @include center;
-
+        width: 100%;
         .cd-bgc{
             background-color: rgba(10,10,10);
+            flex-shrink:0;
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -118,6 +110,26 @@
         @include center;
         .fold-con{
             @include center;
+        }
+        .stop-con{
+            height: 24px;
+            width: 24px;
+            margin-right: 15px;
+            position: relative;
+            .circle{
+                @include center;
+                position: absolute;
+                border: 2px solid rgb(100,100,100);
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+            }
+            
+            img{
+                height: 9px;
+                width: 8px;
+            }
+            
         }
     }
 </style>

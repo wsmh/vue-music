@@ -49,6 +49,10 @@
         songStore.play();
     })
 
+    function updateTime(){
+        songStore.setCurrentTime(audioRef.value.currentTime)
+        
+    }
     tabStore.show();
 
 
@@ -90,7 +94,7 @@
 <template>
     
   
-    <CDPage v-show="songStore.isFullScreen"  v-if="songStore.currentSong"/>
+    <CDPage v-show="songStore.isFullScreen" :audio-ref="audioRef" v-if="songStore.currentSong"/>
 
     <div class="layout-con">
         <div class="main-part"  v-show="!songStore.isFullScreen">
@@ -104,7 +108,7 @@
         </div>
     </div>
 
-    <audio src="/media/cc0-audio/t-rex-roar.mp3" ref="audioRef"></audio>
+    <audio @timeupdate="updateTime" @ended="songStore.nextSong" src="/media/cc0-audio/t-rex-roar.mp3" ref="audioRef"></audio>
     
     
     

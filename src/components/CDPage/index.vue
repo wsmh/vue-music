@@ -1,12 +1,32 @@
 <script setup>
 import { useSongStore } from '@/stores/songStore';
-import { getArtistsName } from '@/utils/dataHandle';
-import { watch,ref } from 'vue';
+import { getArtistsName,timeFormat } from '@/utils/dataHandle';
+import { watch, ref , onUnmounted,defineProps } from 'vue';
+
+const props = defineProps({
+    audioRef:{
+        type:Object
+    }
+})
 
 const songStore = useSongStore()
 const cdBoxRef = ref(null)
 const cdImgRef = ref(null)
+const progressRef = ref(null)
+const progressBgcRef = ref(null)
+const isMoving = ref(false);
 
+const currentPercentage = ref(0);
+const currentTimeF = ref('');
+
+let timer = setInterval(()=>{
+    if(isMoving.value) return;
+    currentPercentage.value = songStore.currentPercentage.toFixed(2);
+},1000)
+
+watch(()=>songStore.currentTime,value=>{
+    currentTimeF.value = timeFormat(value*1000);
+})
 
 watch(()=>songStore.isPlaying,(newValue)=>{
     if(!newValue){
@@ -17,10 +37,33 @@ watch(()=>songStore.isPlaying,(newValue)=>{
     }
 })
 
+onUnmounted(()=>{
+    clearInterval(timer)
+})
+
 function togglePlay() {
     songStore.toggle();
     
 }
+
+function onTouchStart(e){
+    isMoving.value = true;
+}
+function onTouchMove(e){
+    const x2 = e.touches[0].pageX;
+    e.touches[0].moveWidth = x2 - progressBgcRef.value.getBoundingClientRect().left;
+    const movePerc = Math.min(1, Math.max(0,e.touches[0].moveWidth / progressBgcRef.value.offsetWidth));
+    currentPercentage.value = movePerc.toFixed(2);
+}
+function onTouchEnd(){
+    props.audioRef.currentTime = currentPercentage.value*props.audioRef.duration;
+    isMoving.value = false;
+}
+
+function onTouchCancel(){
+    isMoving.value = false;
+}
+
 
 </script>
 
@@ -76,14 +119,21 @@ function togglePlay() {
                 </div>
             </div>
             <div class="progress-line-con">
-                <div class="progress-line">
-                    <div class="progress-circle"></div>
+                <div class="progress-line-bgc"
+                @touchstart.prevent="onTouchStart"
+                @touchmove.prevent="onTouchMove"
+                @touchend.prevent="onTouchEnd"
+                @touchcancel="onTouchCancel"
+                ref="progressBgcRef">
+                    <div class="progress-line" ref="progressRef" :style="{width: `${currentPercentage*100}%`}">
+                        <div class="progress-circle"></div>
+                    </div>
                 </div>
             </div>
             <div class="song-state">
-                <div class="duration">00:01</div>
+                <div class="duration">{{currentTimeF}}</div>
                 <div class="song-qual">Standard</div>
-                <div class="duration">02:03</div>
+                <div class="duration">{{timeFormat(songStore.currentSong.songTime)}}</div>
             </div>
             <div class="song-controler-con">
                 <div class="song-mode">
@@ -162,7 +212,6 @@ function togglePlay() {
         margin-top: 15px;
         width: 90%;
         height: 100%;
-
         .header {
             @include center-space;
 
@@ -208,9 +257,10 @@ function togglePlay() {
             .song-prof {
                 .song-name-con {
                     @include flex-v-center;
-
+                    max-width: 200px;
                     .song-name {
                         color: rgba(250, 250, 250, 0.587);
+                        @include text-eli;
                     }
 
                     .VIP-con {
@@ -230,10 +280,11 @@ function togglePlay() {
                 .song-creator {
                     margin-top: 6px;
                     @include flex-v-center;
-
+                    max-width: 200px;
                     .creator-name {
                         color: rgba(235, 234, 234, 0.486);
                         font-size: 14px;
+                        @include text-eli;
                     }
 
                 }
@@ -255,34 +306,42 @@ function togglePlay() {
         }
 
 
-
-
         .progress-line-con {
             margin-top: 20px;
-
-            .progress-line {
+            height: 8px;
+            @include center;
+            width: 100%;
+            .progress-line-bgc {
                 width: 100%;
                 height: 3px;
                 background-color: rgba(222, 222, 222, 0.313);
                 border-radius: 30px;
                 position: relative;
+
+                .progress-line{
+                    position: absolute;
+                    height: 3px;
+                    border-radius: 30px;
+                    background-color: rgba(222, 222, 222, 0.726);
+
+                    .progress-circle {
+                        position: absolute;
+                        top: -1.5px;
+                        right: -3.5px;
+                        width: 7px;
+                        height: 7px;
+                        border-radius: 50%;
+                        background-color: rgb(255, 255, 255);
+                    }
+                }
             }
 
-            .progress-circle {
-                position: absolute;
-                top: -1.5px;
-                left: 0;
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                background-color: white;
-            }
         }
 
         .song-state {
             margin-top: 8px;
             @include center-space;
-
+            width: 100%;
             .song-qual {
                 color: rgba(235, 234, 234, 0.297);
                 font-size: 10px;
