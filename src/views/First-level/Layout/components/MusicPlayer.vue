@@ -1,22 +1,48 @@
 <script setup>
+    import { defineProps,computed,ref } from 'vue';
+    import { useSongStore } from '@/stores/songStore';
+    import { getArtistsName } from '@/utils/dataHandle';
+
+  const props = defineProps({
+    isExpand:{
+        type:Boolean
+    }
+  })
   
+  const songStore = useSongStore();
+
+
+  const size = computed(()=>{
+    const state = props.isExpand?{
+        height:'62px'
+    }:{
+
+    }
+    return state
+  })
+
+  function togglePlay() {
+    songStore.toggle();
+    
+}
 
 </script>
 
 <template>
-    <div class="vt-con">
+    <div class="vt-con" :style="size">
         <div class="main-con">
-            <div class='cd-con'>
+            <div class='cd-con' @click="songStore.toFullScreen">
                 <div class="cd-bgc">
-                    <img src="@/components/png/avatar.jpg">
+                    <img :src="songStore.currentSong?.al.picUrl">
                 </div>
-                <div class="song-name">Tek It </div>
-                <div class="song-creator">- Cafune</div>
+                <div class="song-name">{{songStore.currentSong?.name }}</div>
+                <div class="song-creator">- {{getArtistsName(songStore.currentSong?.ar,songStore.currentSong?.al)}}</div>
             </div>
             <div class="oper-con">
                 <div class="stop-con">
-                    <div class="circle">
-                        <img src="@/components/png/stop.png">
+                    <div class="circle" @click="togglePlay">
+                        <img src="@/components/png/stop.png" v-show="songStore.isPlaying">
+                        <img src="@/components/png/play-black.png" v-show="!songStore.isPlaying">
                     </div>
                 </div>
                 <div class="fold-con">
@@ -42,12 +68,15 @@
     .song-name{
         margin-left: 10px;
         font-size: 15px;
-        color: rgb(75,74,80)
+        color: rgb(75,74,80);
+        white-space: nowrap;
     }
     .song-creator{
         margin-left: 7px;
         font-size: 15px;
         color: rgb(140,140,140);
+        width: 200px;
+        @include text-eli;
     }
     .stop-con{
         height: 24px;
@@ -65,7 +94,7 @@
         
         img{
             height: 9px;
-            width: 7px;
+            width: 8px;
         }
         
     }

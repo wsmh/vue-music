@@ -1,7 +1,64 @@
 <script setup>
     import RootTabBar from './components/RootTabBar.vue';
     import MusicPlayer from './components/MusicPlayer.vue';
-    
+    import { useTabStore } from '@/stores/tabStore';
+    import { computed, watch, ref } from 'vue';
+    import CDPage from '@/components/CDPage/index.vue'
+    import { useSongStore } from '@/stores/songStore';
+
+    const tabStore = useTabStore();
+    const songStore = useSongStore();
+    const tabStyle = computed(()=>{
+        const tabState = (tabStore.isTabShow&&!songStore.isFullScreen)?{
+        }:{
+            bottom:'-70px'
+        }
+        return tabState;
+    })
+    const playerStyle = computed(()=>{
+        if(songStore.isFullScreen){
+            return{
+                bottom: '-70px'
+            }
+        }
+        const playerState = tabStore.isTabShow?{
+        }:{
+            bottom:'0px'
+        }
+        return playerState;
+    })
+
+    const audioRef = ref(null);
+
+    watch(()=>songStore.isPlaying,(newValue)=>{
+        if(newValue){
+            audioRef.value.play();
+            
+        }else{
+            audioRef.value.pause();
+        }
+    })
+
+    watch(()=>songStore.currentSong,(newValue)=>{
+        const audioEl = audioRef.value;
+        if(!newValue.url){
+            return;
+        }
+        audioEl.src = newValue.url;
+        audioEl.play();
+        songStore.play();
+    })
+
+    tabStore.show();
+
+
+
+
+
+
+
+
+
     const tabList = [{
         id:1,
         name:'推荐',
@@ -32,23 +89,32 @@
 
 <template>
     
+  
+    <CDPage v-show="songStore.isFullScreen"  v-if="songStore.currentSong"/>
+
     <div class="layout-con">
-        <div class="main-part">
+        <div class="main-part"  v-show="!songStore.isFullScreen">
             <RouterView/>
         </div>
-        <div class="music-player">
-            <MusicPlayer/>
+        <div class="music-player" :style="playerStyle" v-if="songStore.currentSong">
+            <MusicPlayer :is-expand="!tabStore.isTabShow"/>
         </div>
-        <div class="bottom-bar">
+        <div class="bottom-bar" :style="tabStyle">
             <RootTabBar :label-list="tabList"/>
         </div>
     </div>
+
+    <audio src="/media/cc0-audio/t-rex-roar.mp3" ref="audioRef"></audio>
+    
     
     
     
 </template>
 
 <style scoped lang="scss">
+    .main-part{
+        margin-top: 15px;
+    }
     .layout-con{
         .bottom-bar{
             @include center;
@@ -56,9 +122,7 @@
             height: 70px;
             position: fixed;
             bottom: 0;
-        }
-        .main-part{
-            margin-top: 15px;
+            transition: all 0.3s;
         }
     }
     .layout-con::before{
@@ -74,5 +138,7 @@
         width: 100%;
         position: fixed;
         bottom: 70px;
+        transition: bottom 0.3s;
     }
+
 </style>

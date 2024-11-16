@@ -1,12 +1,11 @@
 <script setup>
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   const props = defineProps({
     labelList:{
         type:Array
     }
   })
   const activeTab = ref(1);
-
 
 </script>
 

@@ -6,13 +6,19 @@
     import { getListDetailAPI } from '@/api/getMusicList';
     import { getMusicDetail } from '@/api/MusicDetail';
     import { getListInfoAPI } from '@/api/getMusicList';
-    
+    import { useTabStore } from '@/stores/tabStore';
+    import { useSongStore } from '@/stores/songStore';
+    import { getMusicUrl } from '@/api/MusicDetail';
+
+    const tabStore = useTabStore();
     const route = useRoute();
+    const songStore = useSongStore();
     const songsList = ref([])
     const listInfo = ref({})
     const desc = ref('');
     const stopLoad = ref(false);
     const isFullScreen = ref(false);
+    const isUrlGetted = ref(false);
     const bgcStyle = computed(()=>{
         return{
             backgroundImage: `url(${listInfo.value.coverImgUrl})`
@@ -20,6 +26,7 @@
     })
     let offset = 0;
 
+    tabStore.hidden();
     onMounted(()=>{
         getDetailData();
         getListInfo();
@@ -28,13 +35,14 @@
     async function getListInfo() {
         const res = await getListInfoAPI(route.query.id);
         listInfo.value = res.playlist;
+        songStore.setListName(listInfo.value.name)
         desc.value = listInfo.value.description;
         desc.value.replace('\n',' ');
     }
 
     async function load() {
-        offset += 20;
-        const res = await getListDetailAPI(route.query.id,20,offset)
+        offset += 15;
+        const res = await getListDetailAPI(route.query.id,15,offset)
         if(res.songs.length === 0){
             stopLoad.value = true;
             return;
@@ -50,7 +58,7 @@
     }
 
     async function getDetailData() {
-        const res = await getListDetailAPI(route.query.id,20,offset)
+        const res = await getListDetailAPI(route.query.id,15,offset)
         for(let i = 0;i<res.songs.length;i++){
             const musicRes = await getMusicDetail(res.songs[i].id)
             res.songs[i].sq = musicRes.data.sq;
@@ -61,7 +69,26 @@
         
     }
 
-    
+    async function playThisSong(index){
+        if(isUrlGetted.value){
+            songStore.setIndex(index);
+            songStore.play();
+            return;
+        }
+        const id = songsList.value[index].id
+        const res = await getMusicUrl(id);
+        songsList.value[index].url = res.data[0].url;
+        songStore.playSongList(songsList.value)
+        songStore.setIndex(index);
+        songStore.play();
+
+        for(let i =0;i<songsList.value.length;i++){
+            const idd = songsList.value[i].id
+            const ress = await getMusicUrl(idd);
+            songsList.value[i].url = ress.data[0].url;
+        }
+        songStore.playSongList(songsList.value)
+    }
 </script>
 
 <template>
@@ -70,7 +97,7 @@
             <div class="page-info-con">
                 <div class="info-con">
                 <div class="header">
-                    <div class="back-btn" @click="$router.go(-1)">
+                    <div class="back-btn" @click="$router.go(-1);tabStore.show()">
                         <el-icon :size="28" style="color:white;"><ArrowLeft /></el-icon>
                     </div>
                     <div class="header-text">
@@ -154,8 +181,8 @@
             <div class="music-list-con">
                 <div class="music-list">
                     <div class="music-oper-con">
-                        <img src="@/components/png/play-red.png">
-                        <div class="music-play-text">
+                        <img src="@/components/png/play-red.png"  @click="playSongList">
+                        <div class="music-play-text"  @click="playThisSong(0)">
                             <div class="text-h">
                                 播放全部
                             </div>
@@ -169,13 +196,14 @@
                             <div class="manage"><el-icon :size="22" style="color: rgba(0,0,0,0.8);"><Fold /></el-icon></div>
                         </div>
                     </div>
-                    <div class="music-items" v-infinite-scroll="load" :infinite-scroll-disabled="stopLoad">
-                        <div class="music-item" v-for="(item,index) in songsList">
+                    <div class="music-items">
+                        <div class="music-item" v-for="(item,index) in songsList" @click="playThisSong(index)">
                             <div class="index">
                                 <p>{{index+1}}</p>
                             </div>
                             <MusicItem :music-info="item"/>
                         </div>
+                        <div class="list-root"></div>
                     </div>
                 </div>
                 
@@ -213,6 +241,10 @@
 </template>
 
 <style scoped lang="scss">
+    .list-root{
+        width: 100%;
+        height: 50px;
+    }
     .full-page-text{
         margin-top: 30px;
         width: 92%;
@@ -255,7 +287,6 @@
             margin-top: 15px;
         }
         .full-main-con{
-            margin-top: 20px;
             width: 92%;
             height: 100%;
             display: flex;
@@ -421,7 +452,6 @@
     .page-info-con{
         width: 100%;
         height: 100%;
-        margin-top: 15px;
         @include flex-h-center;
         .info-con{
             width: 92%;

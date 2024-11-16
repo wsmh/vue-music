@@ -8,3 +8,13 @@ export function getMusicDetail(id) {
         }
     })
 }
+
+export function getMusicUrl(id) {
+    return httpInstance({
+        url: '/song/url/v1',
+        params: {
+            id,
+            level: 'standard'
+        }
+    })
+}

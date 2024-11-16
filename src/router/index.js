@@ -9,7 +9,7 @@ import Player from '@/views/Third-level/example/Player.vue'
 import Ranking from '@/views/Fourth-level/Ranking/index.vue'
 import Selected from '@/views/Fourth-level//Selected/index.vue'
 import Recommend from '@/views/Second-level/Recommend/index.vue'
-import MusicListDetail from '@/views/First-level/MusicListDetail/index.vue'
+import MusicListDetail from '@/views/Second-level/MusicListDetail/index.vue'
 import MySpace from '@/views/Second-level/MySpace/index.vue'
 
 const router = createRouter({
@@ -18,9 +18,6 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/layout/myspace'
-    }, {
-      component: MusicListDetail,
-      path: '/musiclist'
     },
     {
       component: Login,
@@ -29,6 +26,9 @@ const router = createRouter({
       component: Layout,
       path: '/layout',
       children: [{
+        component: MusicListDetail,
+        path: '/musiclist'
+      }, {
         component: Explore,
         path: '/layout/explore',
         redirect: '/layout/explore/music/selected',
