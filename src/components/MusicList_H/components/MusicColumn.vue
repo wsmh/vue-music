@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps } from 'vue';
+    import { computed, defineProps, onMounted } from 'vue';
     import { ref } from 'vue';
     import { getArtistsName } from '@/utils/dataHandle';
 
@@ -10,9 +10,13 @@
     })
 
     const songInfo = ref(props.musicInfo.song)
+    const artistName = ref('')
     
+    
+    onMounted(()=>{
+        artistName.value = getArtistsName(songInfo.value.artists,songInfo.value.album)
+    })
 
-    
     
 </script>
 
@@ -21,11 +25,11 @@
         <img :src="props.musicInfo.picUrl" class="cover">
         <div class="song-info">
             <div class="song-name">
-                {{songInfo.name}}
+                {{props.musicInfo.name}}
             </div>
             <div class="song-desc">
                <div class="quality-icon"> {{songInfo.album.subType}} </div> 
-                <div class="song-spec-desc">{{ getArtistsName(songInfo.artists,songInfo.album) }}</div>
+                <div class="song-spec-desc">{{ artistName }}</div>
             </div>
         </div>
         <img src="@/components/png/play-black.png" class="play-icon">

@@ -10,7 +10,9 @@
   })
   
   const songStore = useSongStore();
-
+  const artistName = computed(()=>
+  getArtistsName(songStore.currentSong?.ar,songStore.currentSong?.al)
+)
 
   const size = computed(()=>{
     const state = props.isExpand?{
@@ -23,7 +25,6 @@
 
   function togglePlay() {
     songStore.toggle();
-    
 }
 
 </script>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="cd-text">
                     <div class="song-name">{{songStore.currentSong?.name }}</div>
-                    <div class="song-creator">- {{getArtistsName(songStore.currentSong?.ar,songStore.currentSong?.al)}}</div>
+                    <div class="song-creator">- {{artistName}}</div>
                 </div>
                 
             </div>
@@ -48,7 +49,7 @@
                         <img src="@/components/png/play-black.png" v-show="!songStore.isPlaying">
                     </div>
                 </div>
-                <div class="fold-con">
+                <div class="fold-con" @click="songStore.showList">
                     <el-icon :size="24" style="color: rgb(70,70,70);"><Fold /></el-icon>
                 </div>
             </div>

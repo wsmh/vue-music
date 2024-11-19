@@ -5,18 +5,21 @@
     import { computed, watch, ref } from 'vue';
     import CDPage from '@/components/CDPage/index.vue'
     import { useSongStore } from '@/stores/songStore';
+    import MusicListPage from './components/MusicListPage.vue';
 
     const tabStore = useTabStore();
     const songStore = useSongStore();
     const tabStyle = computed(()=>{
-        const tabState = (tabStore.isTabShow&&!songStore.isFullScreen)?{
+        const tabState = (tabStore.isTabShow&&!songStore.isFullScreen&&!songStore.isListShow)?{
         }:{
             bottom:'-70px'
         }
         return tabState;
     })
     const playerStyle = computed(()=>{
-        if(songStore.isFullScreen){
+        if(songStore.isFullScreen||songStore.isListShow){
+            
+            
             return{
                 bottom: '-70px'
             }
@@ -56,7 +59,7 @@
     tabStore.show();
 
 
-
+    
 
 
 
@@ -93,10 +96,9 @@
 
 <template>
     
-  
+  <div class="main-con">
     <CDPage v-show="songStore.isFullScreen" :audio-ref="audioRef" v-if="songStore.currentSong"/>
-
-    <div class="layout-con">
+    <div class="layout-con" :class="{banCon: songStore.isListShow}" >
         <div class="main-part"  v-show="!songStore.isFullScreen">
             <RouterView/>
         </div>
@@ -107,7 +109,13 @@
             <RootTabBar :label-list="tabList"/>
         </div>
     </div>
-
+    <div class="musicList-con" :class="{listPageActive: songStore.isListShow}" v-if="songStore.playList.length!=0">
+        <div class="musicList-bgc" @touchstart.stop="songStore.hiddenList"></div>
+        <MusicListPage class="list-page"/>
+    </div>
+    
+  </div>
+    
     <audio @timeupdate="updateTime" @ended="songStore.nextSong" src="/media/cc0-audio/t-rex-roar.mp3" ref="audioRef"></audio>
     
     
@@ -116,6 +124,37 @@
 </template>
 
 <style scoped lang="scss">
+    .main-con{
+        overflow: hidden;
+    }
+    .banCon{
+        z-index: -10;
+        filter: blur(30px);
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+    .musicList-con{
+        width: 100%;
+        height: 736px;
+        position: fixed;
+        bottom: -800px;
+        left: 0;
+        transition: bottom 0.3s;
+        z-index: 1000;
+        overflow: hidden;
+        .musicList-bgc{
+            width: 100%;
+            height: 220px;
+        }
+        .list-page{
+            width: 100%;
+            z-index: 1001;
+        }    
+    }
+    .listPageActive{
+        bottom: -10px;
+    }
     .main-part{
         margin-top: 15px;
     }

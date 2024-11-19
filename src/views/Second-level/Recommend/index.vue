@@ -9,6 +9,7 @@
     const topMusicData = ref([])
     const musicList_new = ref([]);
     const music_like = ref([]);
+    const nowTime = ref('')
 async function getMusicData(){
   const res1 = await getTopMusicAPI(5);
   const res2 = await getNewMusicAPI(6);
@@ -41,6 +42,7 @@ async function getMusicData(){
     
     onMounted(()=>{
         getMusicData();
+        nowTime.value = getTimeRange()
     })
 </script>
 
@@ -50,7 +52,7 @@ async function getMusicData(){
             <RecommendHeader />
             <div class="res-body">
                 <div class="time-rec">
-                    <p>{{getTimeRange()}}</p>
+                    <p>{{nowTime}}</p>
                     <MusicList_V :music-list="topMusicData" />
                 </div>
                 <MusicList_V :music-list="musicList_new" title="推荐歌单 >" class="rec-songs" v-if="musicList_new.length != 0"/>

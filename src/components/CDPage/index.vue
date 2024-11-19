@@ -1,7 +1,7 @@
 <script setup>
 import { useSongStore } from '@/stores/songStore';
 import { getArtistsName,timeFormat } from '@/utils/dataHandle';
-import { watch, ref , onUnmounted,defineProps } from 'vue';
+import { watch, ref , computed ,defineProps, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     audioRef:{
@@ -18,7 +18,9 @@ const isMoving = ref(false);
 
 const currentPercentage = ref(0);
 const currentTimeF = ref('');
-
+const artistName = computed(()=>
+    getArtistsName(songStore.currentSong.ar,songStore.currentSong.al)
+)
 let timer = setInterval(()=>{
     if(isMoving.value) return;
     currentPercentage.value = songStore.currentPercentage.toFixed(2);
@@ -97,7 +99,7 @@ function onTouchCancel(){
                         <div class="VIP-con">VIP</div>
                     </div>
                     <div class="song-creator">
-                        <div class="creator-name">{{getArtistsName(songStore.currentSong.ar,songStore.currentSong.al)}} ></div>
+                        <div class="creator-name">{{artistName}} ></div>
                     </div>
                 </div>
                 <div class="song-data">
@@ -204,7 +206,8 @@ function onTouchCancel(){
         width: 100%;
         height: 100%;
         position: fixed;
-        background-color: rgb(92, 61, 38);
+        background: linear-gradient(rgb(159, 114, 79),rgb(92, 61, 38));
+
         z-index: -1;
     }
 

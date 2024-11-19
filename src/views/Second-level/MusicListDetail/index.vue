@@ -99,7 +99,7 @@
             <div class="page-info-con">
                 <div class="info-con">
                 <div class="header">
-                    <div class="back-btn" @click="$router.go(-1);tabStore.show()">
+                    <div class="back-btn" @touchstart="$router.go(-1);tabStore.show()">
                         <el-icon :size="28" style="color:white;"><ArrowLeft /></el-icon>
                     </div>
                     <div class="header-text">
@@ -342,6 +342,7 @@
         width: 100%;
         height: 100%;
         z-index: 10;
+        overflow: hidden
     }
     .music-list-con{
         width: 100%;

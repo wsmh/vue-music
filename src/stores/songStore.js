@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 export const useSongStore = defineStore('song-store', () => {
     //state
@@ -9,6 +9,7 @@ export const useSongStore = defineStore('song-store', () => {
     const playList = ref([])
     const songIndex = ref(0)
     const currentTime = ref(0)
+    const isListShow = ref(false);
 
     const currentPercentage = computed(() => currentTime.value * 1000 / currentSong.value.songTime)
     const currentSong = computed(() =>
@@ -17,6 +18,12 @@ export const useSongStore = defineStore('song-store', () => {
     const songCount = computed(() => playList.value.length)
 
     //method
+    function showList() {
+        isListShow.value = true;
+    }
+    function hiddenList() {
+        isListShow.value = false;
+    }
     function setCurrentTime(time) {
         currentTime.value = time;
     }
@@ -59,6 +66,7 @@ export const useSongStore = defineStore('song-store', () => {
         isFullScreen,
         toFullScreen,
         cancelFullScreen,
+        songIndex,
         isPlaying,
         playSongList,
         play,
@@ -73,5 +81,9 @@ export const useSongStore = defineStore('song-store', () => {
         currentTime,
         setCurrentTime,
         currentPercentage,
+        isListShow,
+        showList,
+        hiddenList,
+        playList
     }
 })
