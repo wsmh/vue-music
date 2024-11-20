@@ -10,6 +10,7 @@ export const useSongStore = defineStore('song-store', () => {
     const songIndex = ref(0)
     const currentTime = ref(0)
     const isListShow = ref(false);
+    const isCommentsPageShow = ref(false);
 
     const currentPercentage = computed(() => currentTime.value * 1000 / currentSong.value.songTime)
     const currentSong = computed(() =>
@@ -18,6 +19,12 @@ export const useSongStore = defineStore('song-store', () => {
     const songCount = computed(() => playList.value.length)
 
     //method
+    function showCommentsPage() {
+        isCommentsPageShow.value = true;
+    }
+    function hiddenCommentsPage() {
+        isCommentsPageShow.value = false;
+    }
     function showList() {
         isListShow.value = true;
     }
@@ -84,6 +91,9 @@ export const useSongStore = defineStore('song-store', () => {
         isListShow,
         showList,
         hiddenList,
-        playList
+        playList,
+        showCommentsPage,
+        hiddenCommentsPage,
+        isCommentsPageShow
     }
 })

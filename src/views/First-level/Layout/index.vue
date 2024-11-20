@@ -3,7 +3,6 @@
     import MusicPlayer from './components/MusicPlayer.vue';
     import { useTabStore } from '@/stores/tabStore';
     import { computed, watch, ref } from 'vue';
-    import CDPage from '@/components/CDPage/index.vue'
     import { useSongStore } from '@/stores/songStore';
     import MusicListPage from './components/MusicListPage.vue';
 
@@ -18,8 +17,6 @@
     })
     const playerStyle = computed(()=>{
         if(songStore.isFullScreen||songStore.isListShow){
-            
-            
             return{
                 bottom: '-70px'
             }
@@ -31,31 +28,7 @@
         return playerState;
     })
 
-    const audioRef = ref(null);
-
-    watch(()=>songStore.isPlaying,(newValue)=>{
-        if(newValue){
-            audioRef.value.play();
-            
-        }else{
-            audioRef.value.pause();
-        }
-    })
-
-    watch(()=>songStore.currentSong,(newValue)=>{
-        const audioEl = audioRef.value;
-        if(!newValue.url){
-            return;
-        }
-        audioEl.src = newValue.url;
-        audioEl.play();
-        songStore.play();
-    })
-
-    function updateTime(){
-        songStore.setCurrentTime(audioRef.value.currentTime)
-        
-    }
+    
     tabStore.show();
 
 
@@ -97,7 +70,6 @@
 <template>
     
   <div class="main-con">
-    <CDPage v-show="songStore.isFullScreen" :audio-ref="audioRef" v-if="songStore.currentSong"/>
     <div class="layout-con" :class="{banCon: songStore.isListShow}" >
         <div class="main-part"  v-show="!songStore.isFullScreen">
             <RouterView/>
@@ -116,7 +88,7 @@
     
   </div>
     
-    <audio @timeupdate="updateTime" @ended="songStore.nextSong" src="/media/cc0-audio/t-rex-roar.mp3" ref="audioRef"></audio>
+
     
     
     

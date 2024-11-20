@@ -11,13 +11,18 @@ import Selected from '@/views/Fourth-level//Selected/index.vue'
 import Recommend from '@/views/Second-level/Recommend/index.vue'
 import MusicListDetail from '@/views/Second-level/MusicListDetail/index.vue'
 import MySpace from '@/views/Second-level/MySpace/index.vue'
+import CommentPage from '@/components/CommentsPage/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/layout/myspace'
+      redirect: '/layout/recommend'
+    },
+    {
+      component: CommentPage,
+      path: '/comments/:id'
     },
     {
       component: Login,

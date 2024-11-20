@@ -1,7 +1,7 @@
 <script setup>
 import { useSongStore } from '@/stores/songStore';
 import { getArtistsName,timeFormat } from '@/utils/dataHandle';
-import { watch, ref , computed ,defineProps, onMounted, onUnmounted } from 'vue';
+import { watch, ref , computed ,defineProps, onUnmounted } from 'vue';
 
 const props = defineProps({
     audioRef:{
@@ -113,7 +113,7 @@ function onTouchCancel(){
                             </path>
                         </svg>
                     </div>
-                    <div class="song-comments">
+                    <div class="song-comments" @touchstart="$router.push(`/comments/${songStore.currentSong.id}`)">
                         <el-icon>
                             <ChatLineRound />
                         </el-icon>
@@ -151,7 +151,7 @@ function onTouchCancel(){
                 <div class="song-controler" @click="songStore.nextSong">
                     <img src="@/components/png/next.png">
                 </div>
-                <div class="song-mode">
+                <div class="song-mode" @touchstart="songStore.showList">
                     <el-icon>
                         <Expand />
                     </el-icon>

@@ -13,11 +13,6 @@
     const artistName = ref('')
     
     onMounted(()=>{
-        console.log(props.songInfo);
-        
-        console.log(props.songInfo.ar);
-        console.log(props.songInfo);
-        console.log(props.songInfo.al);
         artistName.value = getArtistsName(props.songInfo.ar,props.songInfo.al)
     })
 
