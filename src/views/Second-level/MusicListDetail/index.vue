@@ -2,16 +2,20 @@
     import { computed, onMounted,ref } from 'vue';
     import { numTrans } from '@/utils/dataHandle';
     import MusicItem from './components/MusicItem.vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute,useRouter } from 'vue-router';
     import { getListDetailAPI } from '@/api/getMusicList';
     import { getMusicDetail } from '@/api/MusicDetail';
     import { getListInfoAPI } from '@/api/getMusicList';
     import { useTabStore } from '@/stores/tabStore';
     import { useSongStore } from '@/stores/songStore';
     import { getMusicUrl } from '@/api/MusicDetail';
+    import { useUserStore } from '@/stores/userStore';
+    import { subscribeListAPI,commentListAPI } from '@/api/userOper';
 
     const tabStore = useTabStore();
     const route = useRoute();
+    const router = useRouter();
+    const userStore = useUserStore();
     const songStore = useSongStore();
     const songsList = ref([])
     const listInfo = ref({})
@@ -91,6 +95,25 @@
         }
         songStore.playSongList(songsList.value)
     }
+
+    async function comment(){
+        if(userStore.isLogin){
+            // 执行评论逻辑
+            const res = await commentListAPI(route.query.id,'commit')
+        }else{
+            router.replace('/login')
+        }
+    }
+    async function subscrible(){
+        if(userStore.isLogin){
+            // 执行收藏逻辑
+            const res = await subscribeListAPI(1,route.query.id)
+            
+            
+        }else{
+            // router.replace('/login')
+        }
+    }
 </script>
 
 <template>
@@ -168,11 +191,11 @@
                             <el-icon :size="24" style="color: white;"><Share /></el-icon>
                             <p>{{numTrans(listInfo.shareCount)}}</p>
                         </div>
-                        <div class="btn-item">
+                        <div class="btn-item" @touchstart="comment">
                             <el-icon :size="24" style="color: white;"><Comment /></el-icon>
                             <p>{{numTrans(listInfo.commentCount)}}</p>
                         </div>
-                        <div class="btn-item-subs">
+                        <div class="btn-item-subs" @touchstart="subscrible">
                             <el-icon :size="24" style="color: white;"><CirclePlusFilled /></el-icon>
                             <p>{{numTrans(listInfo.subscribedCount)}}</p>
                         </div>

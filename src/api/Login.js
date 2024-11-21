@@ -34,3 +34,9 @@ export function guestLoginAPI() {
         url: '/register/anonimous'
     })
 }
+
+export function getUserInfoAPI() {
+    return httpInstance({
+        url: "/user/account"
+    })
+}

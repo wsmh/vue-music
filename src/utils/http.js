@@ -11,7 +11,7 @@ const httpInstance = axios.create({
 
 // axios请求拦截器
 httpInstance.interceptors.request.use(config => {
-    const userStore = useUserStore();
+    // const userStore = useUserStore();
     // const token = userStore.userData.token
     // if (token) {
     //     config.headers.Authorization = token;

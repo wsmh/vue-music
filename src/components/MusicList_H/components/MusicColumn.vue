@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, defineProps, onMounted } from 'vue';
+    import { defineProps, onMounted } from 'vue';
     import { ref } from 'vue';
     import { getArtistsName } from '@/utils/dataHandle';
 

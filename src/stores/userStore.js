@@ -5,11 +5,14 @@ import { ref } from "vue";
 export const useUserStore = defineStore('user-store', () => {
     //state
     const userData = ref({})
-
+    const isLogin = ref(false);
     //method
     async function login(phone, cap) {
         const res = await loginAPI(phone, cap);
+        console.log(res);
+
         userData.value = res;
+        isLogin.value = true;
     }
     function clearData() {
         userData.value = {};
@@ -19,7 +22,8 @@ export const useUserStore = defineStore('user-store', () => {
     return {
         userData,
         login,
-        clearData
+        clearData,
+        isLogin
     }
 }, {
     persist: true

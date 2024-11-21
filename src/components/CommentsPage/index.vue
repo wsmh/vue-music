@@ -3,14 +3,20 @@ import CommentItem from './components/CommentItem.vue';
 import { getMusicCommentAPI, getMusicInfo } from '@/api/MusicDetail';
 import { MoreOne, Viewfinder } from '@icon-park/vue-next';
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useSongStore } from '@/stores/songStore';
 import { getArtistsName } from '@/utils/dataHandle';
-import { useScroll } from '@vueuse/core'
-
+import { useScroll } from '@vueuse/core';
+import { commentSongAPI } from '@/api/userOper';
+import { useUserStore } from '@/stores/userStore';
+import { ElMessage } from 'element-plus';
+import Layyer from './components/Layyer.vue';
+import { useFloorStore } from '@/stores/floorStore';
 
 const route = useRoute();
 const songStore = useSongStore()
+const userStore = useUserStore();
+const floorStore = useFloorStore();
 const router = useRouter();
 const { y } = useScroll(window)
 
@@ -21,6 +27,7 @@ const commentsCount = ref(0)
 const songInfo = ref({});
 const artistsName = ref('')
 const disable = ref(false);
+const commentContent = ref('')
 let offset = 0
 
 onMounted(() => {
@@ -52,10 +59,27 @@ function backPage() {
     router.go(-1);
 }
 
+async function comment() {
+    if(!userStore.isLogin){
+        router.replace('/login');
+    }else if(commentContent.value != ''){
+        //发送评论逻辑
+        const res = await commentSongAPI(id,commentContent.value)
+        commentContent.value = '';
+    }else{
+        ElMessage({
+                message: '输入的内容为空!',
+                type: 'warning',
+                plain: true,
+                }) 
+    }
+}
+
+
 </script>
 
 <template>
-    <div class="page-con">
+    <div class="page-con" :class="{pageBgc:floorStore.isFloorShow}">
         <div class="header">
             <div class="header-main">
                 <div class="back-arrow" @click="backPage">
@@ -119,17 +143,47 @@ function backPage() {
         </div>
         <div class="input-bgc">
             <div class="input-con">
-                <input type="text" placeholder="去蹦, 去野, 不枉为少年!">
+                <input type="text" placeholder="去蹦, 去野, 不枉为少年!" v-model="commentContent">
             </div>
-            <div class="send-con">
+            <div class="send-con" @touchstart="comment">
                 发送
             </div>
         </div>
     </div>
-
+    <div class="layyer-bgc" :class="{layyerConMerge:floorStore.isFloorShow}">
+        <div class="bgc" @touchstart="floorStore.hiddenFloor"></div>
+        <Layyer class="layyer-con"
+        v-if="Object.keys(floorStore.floorData).length  != 0"
+         />
+    </div>
+    
+    
 </template>
 
 <style scoped lang="scss">
+.layyer-bgc{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    bottom: -100%;
+    left: 0;
+    z-index: 100;
+    transition: all 0.3s;
+    .bgc{
+        height: 10%;
+        width: 100%;
+    }
+}
+.layyerConMerge{
+    bottom: 0;
+}
+.layyer-con{
+    height: 90%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+}
 .input-bgc {
     position: fixed;
     left: 4%;
@@ -211,14 +265,29 @@ function backPage() {
     width: 100%;
     height: 8px;
     margin-top: 10px;
+    flex-shrink: 0;
 }
 
 .page-con {
-    margin-top: 15px;
     width: 100%;
     @include center;
     flex-direction: column;
     overflow: hidden;
+}
+
+.pageBgc{
+    position: relative;
+    z-index: -1;
+    &::before{
+        content: '';
+        position: absolute;
+        z-index: 10;
+        background-color: rgba(46, 45, 45, 0.612);
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
 }
 
 .header {
@@ -259,7 +328,7 @@ function backPage() {
 }
 
 .cd-info {
-    margin-top: 42px;
+    margin-top: 57px;
     @include flex-v-center;
     width: 92%;
 
@@ -269,7 +338,6 @@ function backPage() {
         height: 42px;
         @include center;
         border-radius: 50%;
-        flex-shrink: 0;
 
         img {
             @include circleImg(28px);

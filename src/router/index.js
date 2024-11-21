@@ -18,7 +18,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/layout/recommend'
+      redirect: '/login'
     },
     {
       component: CommentPage,
@@ -30,6 +30,7 @@ const router = createRouter({
     }, {
       component: Layout,
       path: '/layout',
+      redirect: '/layout/recommend',
       children: [{
         component: MusicListDetail,
         path: '/musiclist'

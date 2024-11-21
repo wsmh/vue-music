@@ -1,12 +1,24 @@
 <script setup>
   import { ThumbsUp } from '@icon-park/vue-next';
-  import { defineProps } from 'vue';
+  import { defineProps,ref } from 'vue';
+  import { useRoute } from 'vue-router';
+  import { useFloorStore } from '@/stores/floorStore';
 
   const props = defineProps({
     commentInfo:{
         type:Object
     }
   })
+  const floorStore = useFloorStore();
+  const route = useRoute()
+  const id = route.params.id;
+  
+  function showCommentFloor(){
+    floorStore.setParentId(props.commentInfo.commentId);
+    floorStore.setSongId(id);
+    floorStore.getCommentFloorData();
+    floorStore.showFloor();
+  }
 </script>
 
 <template>
@@ -34,7 +46,7 @@
             <div class="comment-content">
                 {{ props.commentInfo.content }}
             </div>
-            <div class="layyer-detail" v-if="props.commentInfo.showFloorComment.replyCount != 0">
+            <div class="layyer-detail" v-if="props.commentInfo.showFloorComment != null && props.commentInfo.showFloorComment.replyCount != 0" @touchstart="showCommentFloor">
                 {{props.commentInfo.showFloorComment.replyCount}}条回复 >
             </div>
             <el-divider border-style="dotted" class="split-line"/>
